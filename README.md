@@ -13,9 +13,10 @@ Register an item with the ioc - the item can be any type, callback or otherwise
 
 Returns a boolean, whether the name has been registered on the container
 
-**ioc.replace(name, callback)**
+**ioc.replace(name, callback, singleton)**
 
-Replaces an item in the registry with the second argument
+Replaces an item in the registry with the second argument. Pass true as the
+third argument to register as a singleton
 
 **ioc.unregister(name)**
 
@@ -25,6 +26,7 @@ Removes the item from the registry by name
 
 Registers a callback as a singleton. No-op if the second argument isn't a function
 
-**ioc.resolve(name)**
+**ioc.resolve(name, args, context)**
 
-Resolves the item associated with "name"
+Resolves the item associated with "name", with an optional array passed in
+as arguments, and optional "context" used when invoking a callback.
