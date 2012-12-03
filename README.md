@@ -3,7 +3,7 @@ ioc.js
 
 [![Build Status](https://travis-ci.org/tgriesser/ioc.js.png)](https://travis-ci.org/tgriesser/ioc.js)
 
-A simple service IoC service locator for javascript
+A simple IoC service locator for javascript
 
 **ioc.register(name, callback)**
 
