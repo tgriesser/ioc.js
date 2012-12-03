@@ -1,0 +1,28 @@
+{
+  "name": "ioc.js",
+  "version": "0.0.1",
+  "description": "A simple service IoC service locator for javascript",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "mocha": "1.7.x",
+    "should": "1.2.x"
+  },
+  "scripts": {
+    "test": "mocha -r should test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tgriesser/ioc.js"
+  },
+  "keywords": [
+    "ioc",
+    "service",
+    "locator"
+  ],
+  "author": "Tim Griesser",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
