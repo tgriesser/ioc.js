@@ -7,16 +7,15 @@
 // --------------------------------
 (function () {
 
-  var global = this;
-  
-  var registers = {};
-
   var ioc = {};
+
+  var registers = {};
 
   /**
    * Registers an item in the IoC register
    * @param string
    * @param mixed
+   * @return ioc
    */
   ioc.register = function(name, callback) {
     
@@ -35,6 +34,8 @@
   /**
    * Checks whether an item has been registered
    * in the ioc
+   * @param string
+   * @return bool
    */
   ioc.registered = function (name) {
     
@@ -66,6 +67,8 @@
    * with another object or callback
    * @param string
    * @param mixed
+   * @param bool
+   * @return ioc
    */
   ioc.replace = function (name, callback, singleton) {
 
@@ -119,6 +122,9 @@
 
   /**
    * Resolves an item, passing along any arguments
+   * @param string
+   * @param array
+   * @param object
    */
   ioc.resolve = function (name, args, context) {
 
@@ -140,7 +146,14 @@
 
   };
 
+  if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
+    
+    define('ioc', [], function() {
+      return ioc;
+    });
 
+  }
+  
   if (typeof exports !== 'undefined') {
     
     if (typeof module !== 'undefined' && module.exports) {
@@ -150,11 +163,13 @@
     }
     
     exports.ioc = ioc;
-  
+
   } else {
-  
-    root['ioc'] = ioc;
-  
+
+    var global = this;
+
+    global['ioc'] = ioc;
+
   }
 
 }).call(this);
