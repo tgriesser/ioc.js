@@ -11,6 +11,8 @@
 
   var registers = {};
 
+  var singletons = {};
+
   /**
    * Registers an item in the IoC register
    * @param string
@@ -57,6 +59,8 @@
     }
 
     delete registers[name];
+
+    if (singletons[name]) delete singletons[name];
 
     return this;
 
@@ -112,6 +116,8 @@
 
       }
 
+      singletons[name] = true;
+
       return registers[name];
 
     };
@@ -134,7 +140,7 @@
 
     }
 
-    if (typeof registers[name] === 'function') {
+    if (typeof registers[name] === 'function' && ! singletons[name]) {
 
       return registers[name].apply(context, args);
 

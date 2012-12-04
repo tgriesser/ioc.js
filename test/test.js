@@ -97,4 +97,24 @@ describe('ioc.js', function () {
     ioc.resolve('arr').should.be.an.instanceOf(Array);
   });
 
+  it('should not return a singleton twice, even if the result is a function', function () {
+
+    var Singleton = function () {
+      var x = function () {
+        throw new Error('This should not execute');
+      };
+      return x;
+    };
+
+    ioc.singleton('singleton', Singleton);
+
+    (function(){
+
+      ioc.resolve('singleton');
+      ioc.resolve('singleton');
+    
+    }).should.not['throw']();
+
+  });
+
 });

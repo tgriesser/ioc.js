@@ -1,5 +1,5 @@
 {
-  "name": "ioc.js",
+  "name": "ioc",
   "version": "0.0.1",
   "description": "A simple service IoC service locator for javascript",
   "main": "index.js",
