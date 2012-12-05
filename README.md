@@ -9,14 +9,18 @@ A simple IoC service locator for javascript
 
 Register an item with the ioc - the item can be any type, callback or otherwise
 
-**ioc.registered(name)**
-
-Returns a boolean, whether the name has been registered on the container
-
 **ioc.replace(name, callback, singleton)**
 
 Replaces an item in the registry with the second argument. Pass true as the
 third argument to register as a singleton
+
+**ioc.registerOrReplace(name, callback, singleton)**
+
+Registers an item if it doesn't exist yet, replaces it otherwise
+
+**ioc.isRegistered(name)**
+
+Returns a boolean, whether the name has been registered on the container
 
 **ioc.unregister(name)**
 

@@ -17,7 +17,7 @@ describe('ioc.js', function () {
     ioc.register('testing', function () {
       return new TestItem();
     });
-    ioc.registered('testing').should.equal(true);
+    ioc.isRegistered('testing').should.equal(true);
   });
 
   it('should later allow us to resolve the test item', function () {
@@ -36,14 +36,14 @@ describe('ioc.js', function () {
 
   it('should let us unregister the item', function () {
     ioc.unregister('testing');
-    ioc.registered('testing').should.equal(false);
+    ioc.isRegistered('testing').should.equal(false);
   });
 
   it('should allow us to register a singleton', function () {
     ioc.singleton('testing', function () {
       return new TestItem();
     });
-    ioc.registered('testing').should.equal(true);
+    ioc.isRegistered('testing').should.equal(true);
   });
 
   it('should allow us to resolve the singleton', function () {
@@ -64,7 +64,7 @@ describe('ioc.js', function () {
     ioc.replace('testing', function () {
       return new TestItem();
     });
-    ioc.registered('testing').should.equal(true);
+    ioc.isRegistered('testing').should.equal(true);
   });
 
   it('should throw an error when trying to invoke a non registered item', function () {
@@ -114,6 +114,22 @@ describe('ioc.js', function () {
       ioc.resolve('singleton');
     
     }).should.not['throw']();
+  });
+
+  it('should use registerOrReplace to register or replace existing', function () {
+
+    ioc.registerOrReplace('newItem', function () {
+      return 'test';
+
+    });
+
+    ioc.resolve('newItem').should.equal('test');
+
+    ioc.registerOrReplace('singleton', function () {
+      return 'newSingleton';
+    }, true);
+
+    ioc.resolve('singleton').should.equal('newSingleton');
 
   });
 

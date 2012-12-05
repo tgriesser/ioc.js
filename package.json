@@ -11,7 +11,7 @@
     "should": "1.2.x"
   },
   "scripts": {
-    "test": "mocha -r should test/test.js"
+    "test": "mocha -R spec -r should test/test.js"
   },
   "repository": {
     "type": "git",

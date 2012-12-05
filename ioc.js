@@ -21,46 +21,13 @@
      */
     register: function(name, callback) {
       
-      if (this.registered(name)) {
+      if (this.isRegistered(name)) {
 
         throw new Error(name + ' is already registered in the IoC container. Use ioc.replace to replace it.');
 
       }
 
       registers[name] = callback;
-
-      return this;
-
-    },
-
-    /**
-     * Checks whether an item has been registered
-     * in the ioc
-     * @param string
-     * @return bool
-     */
-    registered: function (name) {
-      
-      return (registers[name] !== void 0);
-    
-    },
-
-    /**
-     * Unregister the item
-     * @param string
-     * @return ioc
-     */
-    unregister: function (name) {
-      
-      if ( ! this.registered(name)) {
-      
-        throw new Error(name + ' must be registered in the IoC to unregister it');
-      
-      }
-
-      delete registers[name];
-
-      if (singletons[name]) delete singletons[name];
 
       return this;
 
@@ -76,7 +43,7 @@
      */
     replace: function (name, callback, singleton) {
 
-      if ( ! this.registered(name)) {
+      if ( ! this.isRegistered(name)) {
 
         throw new Error(name + ' must be registered in the IoC container to replace it.');
       
@@ -91,6 +58,62 @@
     },
 
     /**
+     * Registers an item if it doesn't exist yet,
+     * replaces it otherwise
+     * @param string
+     * @param mixed
+     * @param bool
+     * @return ioc
+     */
+    registerOrReplace: function (name, callback, singleton) {
+
+      if (this.isRegistered(name)) {
+
+        this.replace(name, callback, singleton);
+      
+      } else {
+
+        this[(singleton ? 'singleton' : 'register')](name, callback);
+
+      }
+
+      return this;
+    },
+
+    /**
+     * Checks whether an item has been registered
+     * in the ioc
+     * @param string
+     * @return bool
+     */
+    isRegistered: function (name) {
+      
+      return (registers[name] !== void 0);
+    
+    },
+
+    /**
+     * Unregister the item
+     * @param string
+     * @return ioc
+     */
+    unregister: function (name) {
+      
+      if ( ! this.isRegistered(name)) {
+      
+        throw new Error(name + ' must be registered in the IoC to unregister it');
+      
+      }
+
+      delete registers[name];
+
+      if (singletons[name]) delete singletons[name];
+
+      return this;
+
+    },
+
+    /**
      * Register a function as a singleton
      * @param string
      * @param string
@@ -98,7 +121,7 @@
      */
     singleton: function (name, callback) {
       
-      if (this.registered(name)) {
+      if (this.isRegistered(name)) {
 
         throw new Error(name + ' is already registered in the IoC container. Use ioc.replace to replace it.');
       
@@ -134,7 +157,7 @@
      */
     resolve: function (name, args, context) {
 
-      if ( ! this.registered(name)) {
+      if ( ! this.isRegistered(name)) {
 
         throw new Error(name + ' is not registered in the IoC container');
 
@@ -157,7 +180,9 @@
   if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
     
     define('ioc', [], function() {
+      
       return ioc;
+    
     });
 
   }
