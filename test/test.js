@@ -2,6 +2,7 @@ var TestItem = function () {
   this.counter = 0;
   this.increment = function() {
     this.counter++;
+    return this;
   };
 };
 
@@ -10,7 +11,26 @@ describe('ioc.js', function () {
   var ioc = require('../index');
 
   it('index.js should export an ioc object', function () {
-    ioc.should.be.a('object').and.have.property('register');
+    ioc.should.be.a('function');
+    ioc.should.have.property('register');
+    ioc.should.have.property('replace');
+    ioc.should.have.property('registerOrReplace');
+    ioc.should.have.property('isRegistered');
+    ioc.should.have.property('unregister');
+    ioc.should.have.property('singleton');
+  });
+
+  it('should alias ioc() to ioc.resolve()', function () {
+    ioc.register('testing', function () {
+      return new TestItem();
+    });
+
+    var t  = ioc.resolve('testing');
+    var t2 = ioc('testing');
+
+    t.increment().counter.should.equal(t2.increment().counter);
+
+    ioc.unregister('testing');
   });
 
   it('should allow us to register item "testing"', function () {
