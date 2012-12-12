@@ -34,3 +34,33 @@ Registers a callback as a singleton. No-op if the second argument isn't a functi
 
 Resolves the item associated with "name", with an optional array passed in
 as arguments, and optional "context" used when invoking a callback.
+
+## Examples
+
+```javascript
+
+var ioc = require('ioc');
+
+ioc.register('pageView', function (opts) {
+  
+  return (new (Backbone.View.extend({
+    initialize: function (){
+      
+    },
+    render: function () {
+      this.$el.html('Hello World');
+    }
+  }))(opts));
+  
+});
+
+var pageView = ioc.resolve('pageView', [{model:model}]);
+var pageView2 = ioc.resolve('pageView', [{model:model2}]);
+
+```
+
+## License
+
+MIT
+
+
