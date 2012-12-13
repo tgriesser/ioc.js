@@ -168,7 +168,7 @@
 
     if (typeof registers[name] === 'function' && ! singletons[name]) {
 
-      return registers[name].apply(context, args);
+      return registers[name].apply((context || this), args);
 
     } else {
 

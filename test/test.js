@@ -153,4 +153,17 @@ describe('ioc.js', function () {
 
   });
 
+  it('should pass the context of the resolve in the third argument, defaulting to ioc', function () {
+
+    ioc.register('context', function () {
+      return this;
+    });
+
+    ioc.resolve('context').should.equal(ioc);
+
+    var item = {test:true};
+    ioc.resolve('context', null, item).should.equal(item);
+
+  });
+
 });
