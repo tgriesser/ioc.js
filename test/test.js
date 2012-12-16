@@ -153,7 +153,7 @@ describe('ioc.js', function () {
 
   });
 
-  it('should pass the context of the resolve in the third argument, defaulting to ioc', function () {
+  it('should pass the context of the resolve in the third argument - defaulting to ioc', function () {
 
     ioc.register('context', function () {
       return this;
@@ -163,6 +163,29 @@ describe('ioc.js', function () {
 
     var item = {test:true};
     ioc.resolve('context', null, item).should.equal(item);
+
+  });
+
+  it('should provide an "instance" method, to create a new IoC container', function () {
+
+    var ioc2 = ioc.instance();
+
+    ioc.register('testingInstance', function () {
+      return 'test';
+    });
+
+    ioc2.register('testingInstance', function () {
+      return 'test';
+    });
+
+    var i = ioc('testingInstance');
+    i.should.equal(ioc2('testingInstance'));
+    i.should.equal(ioc.resolve('testingInstance'));
+    i.should.equal(ioc2.resolve('testingInstance'));
+
+    (function () {
+      ioc2.register('testingInstance');
+    }).should['throw']();
 
   });
 
