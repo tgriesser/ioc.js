@@ -166,27 +166,4 @@ describe('ioc.js', function () {
 
   });
 
-  it('should provide an "instance" method, to create a new IoC container', function () {
-
-    var ioc2 = ioc.instance();
-
-    ioc.register('testingInstance', function () {
-      return 'test';
-    });
-
-    ioc2.register('testingInstance', function () {
-      return 'test';
-    });
-
-    var i = ioc('testingInstance');
-    i.should.equal(ioc2('testingInstance'));
-    i.should.equal(ioc.resolve('testingInstance'));
-    i.should.equal(ioc2.resolve('testingInstance'));
-
-    (function () {
-      ioc2.register('testingInstance');
-    }).should['throw']();
-
-  });
-
 });
