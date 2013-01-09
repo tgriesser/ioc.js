@@ -166,4 +166,26 @@ describe('ioc.js', function () {
 
   });
 
+  it('should call constructor functions with ioc.ctor', function () {
+
+    ioc.register('ctor', function () {
+      var x = function (arg1, arg2) {
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+      };
+      x.prototype = {
+        test: function () {
+          this.item = 1;
+        }
+      }
+      return x;
+    });
+
+    var ctorVal = ioc.ctor('ctor', 'tim', 'test');
+      ctorVal.test();
+      ctorVal.item.should.equal(1);
+      ctorVal.arg1.should.equal('tim');
+      ctorVal.arg2.should.equal('test');
+  });
+
 });

@@ -8,16 +8,13 @@
 (function () {
 
   var registers = {};
-
   var singletons = {};
 
   /**
    * Alias to ioc.resolve
    */
   var ioc = function () {
-    
     return ioc.resolve.apply(ioc, arguments);
-  
   };
 
   /**
@@ -27,15 +24,10 @@
    * @return ioc
    */
   ioc.register = function(name, callback) {
-    
     if (this.isRegistered(name)) {
-
       throw new Error(name + ' is already registered in the IoC container. Use ioc.replace to replace it.');
-
     }
-
     registers[name] = callback;
-
     return this;
   };
 
@@ -48,17 +40,11 @@
    * @return ioc
    */
   ioc.replace = function (name, callback, singleton) {
-
-    if ( ! this.isRegistered(name)) {
-
+    if (!this.isRegistered(name)) {
       throw new Error(name + ' must be registered in the IoC container to replace it.');
-    
     }
-
     this.unregister(name);
-
     this[(singleton ? 'singleton' : 'register')](name, callback);
-    
     return this;
   };
 
@@ -71,17 +57,11 @@
    * @return ioc
    */
   ioc.registerOrReplace = function (name, callback, singleton) {
-
     if (this.isRegistered(name)) {
-
       this.replace(name, callback, singleton);
-    
     } else {
-
       this[(singleton ? 'singleton' : 'register')](name, callback);
-
     }
-
     return this;
   };
 
@@ -92,9 +72,7 @@
    * @return bool
    */
   ioc.isRegistered = function (name) {
-    
     return (registers[name] !== void 0);
-  
   };
 
   /**
@@ -103,17 +81,11 @@
    * @return ioc
    */
   ioc.unregister = function (name) {
-    
     if ( ! this.isRegistered(name)) {
-    
       throw new Error(name + ' must be registered in the IoC to unregister it');
-    
     }
-
     delete registers[name];
-
     if (singletons[name]) delete singletons[name];
-
     return this;
   };
 
@@ -124,31 +96,18 @@
    * @return ioc
    */
   ioc.singleton = function (name, callback) {
-    
     if (this.isRegistered(name)) {
-
       throw new Error(name + ' is already registered in the IoC container. Use ioc.replace to replace it.');
-    
     }
-
     registers[name] = function () {
-      
       if (typeof registers[name] === 'function') {
-
         registers[name] = callback.apply(this, arguments);
-      
       } else {
-
         registers[name] = callback;
-
       }
-
       singletons[name] = true;
-
       return registers[name];
-
     };
-
     return this;
   };
 
@@ -159,51 +118,48 @@
    * @param object
    */
   ioc.resolve = function (name, args, context) {
-
     if ( ! this.isRegistered(name)) {
-
       throw new Error(name + ' is not registered in the IoC container');
-
     }
-
     if (typeof registers[name] === 'function' && ! singletons[name]) {
-
       return registers[name].apply((context || this), args);
-
     } else {
-
       return registers[name];
-
     }
+  };
 
+  /**
+   * Invokes an item as a constructor, with any trailing arguments applied
+   * @param  string
+   * @param* mixed
+   * @return object
+   */
+  ioc.ctor = function (name) {
+    var fn = registers[name]();
+    if (typeof fn !== 'function') {
+      throw new Error(name + 'is not a function in the IoC container');
+    }
+    function Ctor() {}
+    Ctor.prototype = fn.prototype;
+    var inst = new Ctor();
+    var obj  = fn.apply(inst, Array.prototype.slice.call(arguments, 1));
+    return  Object(obj) === obj ? obj : inst;
   };
 
   if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-    
     define('ioc', [], function() {
-      
       return ioc;
-    
     });
-
   }
   
   if (typeof exports !== 'undefined') {
-    
     if (typeof module !== 'undefined' && module.exports) {
-    
       exports = module.exports = ioc;
-    
     }
-    
     exports.ioc = ioc;
-
   } else {
-
     var global = this;
-
     global['ioc'] = ioc;
-
   }
 
 }).call(this);
