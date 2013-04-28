@@ -101,7 +101,7 @@
       throw new Error(name + ' is already registered in the IoC container. Use ioc.replace to replace it.');
     }
     registers[name] = function () {
-      if (typeof registers[name] === 'function') {
+      if (typeof callback === 'function') {
         registers[name] = callback.apply(this, arguments);
       } else {
         registers[name] = callback;
