@@ -1,14 +1,12 @@
 //
-// A simple service locator pattern IoC
-//
-// Inspired by Laravel http://laravel.com/docs/ioc
+// A simple service locator
 // @author  Tim Griesser
 // @license MIT
-// --------------------------------
+//
 (function () {
 
-  var registers = {};
-  var singletons = {};
+  // Reference variables to prototypes.
+  var slice = Array.prototype.slice;
 
   /**
    * Alias to ioc.resolve
@@ -16,6 +14,9 @@
   var ioc = function () {
     return ioc.resolve.apply(ioc, arguments);
   };
+
+  var registers  = ioc._registers  = {};
+  var singletons = ioc._singletons = {};
 
   /**
    * Registers an item in the IoC register
@@ -117,15 +118,30 @@
    * @param array
    * @param object
    */
-  ioc.resolve = function (name, args, context) {
+  ioc.resolve = function (name /* args */) {
     if ( ! this.isRegistered(name)) {
       throw new Error(name + ' is not registered in the IoC container');
     }
     if (typeof registers[name] === 'function' && ! singletons[name]) {
-      return registers[name].apply((context || this), args);
+      return registers[name].apply(this, slice.call(arguments, 1));
     } else {
       return registers[name];
     }
+  };
+
+  /**
+   * Creates one or more aliases to an existing object
+   * @param  string
+   * @param* string
+   * @return object
+   */
+  ioc.alias = function (name /* aliases */) {
+    var targets = slice.call(arguments, 1);
+    var ref = registers[name];
+    for (var i=0, l=targets.length; i<l; i++) {
+      registers[targets[i]] = ref;
+    }
+    return this;
   };
 
   /**
@@ -142,7 +158,7 @@
     function Ctor() {}
     Ctor.prototype = fn.prototype;
     var inst = new Ctor();
-    var obj  = fn.apply(inst, Array.prototype.slice.call(arguments, 1));
+    var obj  = fn.apply(inst, slice.call(arguments, 1));
     return  Object(obj) === obj ? obj : inst;
   };
 
@@ -150,13 +166,8 @@
     define('ioc', [], function() {
       return ioc;
     });
-  }
-  
-  if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = ioc;
-    }
-    exports.ioc = ioc;
+  } else if (typeof exports === "object") {
+    module.exports = ioc;
   } else {
     var global = this;
     global['ioc'] = ioc;

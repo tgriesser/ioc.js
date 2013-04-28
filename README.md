@@ -30,42 +30,16 @@ Removes the item from the registry by name
 
 Registers a callback as a singleton. No-op if the second argument isn't a function
 
-**ioc.resolve(name, args, context)**
+**ioc.resolve(name, args*)**
 
-Resolves the item associated with "name", with an optional array passed in
-as arguments, and optional "context" used when invoking a callback.
+Resolves the item associated with "name", with any additional arguments used
+in invoking the callback. The callback will also be called with the context of "ioc".
 
 **ioc.ctor(name, args*)**
 
 Calls the function associated with "name" as constructor, with any arguments following name
 passed to the constructor.
 
-## Examples
-
-```javascript
-
-var ioc = require('ioc');
-
-ioc.register('pageView', function (opts) {
-  
-  return (new (Backbone.View.extend({
-    initialize: function (){
-      
-    },
-    render: function () {
-      this.$el.html('Hello World');
-    }
-  }))(opts));
-  
-});
-
-var pageView = ioc.resolve('pageView', [{model:model}]);
-var pageView2 = ioc.resolve('pageView', [{model:model2}]);
-
-```
-
 ## License
 
 MIT
-
-

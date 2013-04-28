@@ -8,7 +8,8 @@
   },
   "devDependencies": {
     "mocha": "1.7.x",
-    "should": "1.2.x"
+    "should": "1.2.x",
+    "underscore": "~1.4.4"
   },
   "scripts": {
     "test": "mocha -R spec -r should test/test.js"

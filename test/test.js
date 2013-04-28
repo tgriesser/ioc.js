@@ -1,3 +1,8 @@
+var _         = require('underscore');
+var assert    = require('assert');
+var equal     = assert.equal;
+var deepEqual = assert.deepEqual;
+
 var TestItem = function () {
   this.counter = 0;
   this.increment = function() {
@@ -153,19 +158,6 @@ describe('ioc.js', function () {
 
   });
 
-  it('should pass the context of the resolve in the third argument - defaulting to ioc', function () {
-
-    ioc.register('context', function () {
-      return this;
-    });
-
-    ioc.resolve('context').should.equal(ioc);
-
-    var item = {test:true};
-    ioc.resolve('context', null, item).should.equal(item);
-
-  });
-
   it('should call constructor functions with ioc.ctor', function () {
 
     ioc.register('ctor', function () {
@@ -186,6 +178,15 @@ describe('ioc.js', function () {
       ctorVal.item.should.equal(1);
       ctorVal.arg1.should.equal('tim');
       ctorVal.arg2.should.equal('test');
+  });
+
+  it('should use ioc.alias to alias an existing object', function() {
+    ioc.singleton('underscore', function() {
+      return _;
+    });
+    ioc.alias('underscore', '_', 'lodash');
+    deepEqual(require('underscore'), ioc.resolve('_'));
+    deepEqual(require('underscore'), ioc.resolve('lodash'));
   });
 
 });
